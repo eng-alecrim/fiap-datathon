@@ -1,0 +1,32 @@
+{
+  "handlers": [
+    {
+      "sink": "log/info.log",
+      "rotation": "1 week",
+      "retention": "1 month",
+      "level": "INFO",
+      "format": "{time} | {level} | {name}:{function}:{line} - {message}",
+      "backtrace": true,
+      "diagnose": true
+    },
+    {
+      "sink": "log/debugging.log",
+      "rotation": "1 week",
+      "retention": "1 month",
+      "level": "TRACE",
+      "format": "{time} | {level} | {name}:{function}:{line} - {message}",
+      "backtrace": true,
+      "diagnose": true
+    },
+    {
+      "sink": "log/errors.log",
+      "rotation": "1 week",
+      "retention": "1 month",
+      "level": "WARNING",
+      "format": "{time} | {level} | {name}:{function}:{line} - {message}",
+      "backtrace": true,
+      "diagnose": true
+    }
+  ]
+}
+
