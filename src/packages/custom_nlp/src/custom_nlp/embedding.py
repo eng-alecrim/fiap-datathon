@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from gensim.models import Word2Vec
 from sentence_transformers import SentenceTransformer
-from typing import List, Union
+from typing import List, Union, Type
 
 # =============================================================
 # Functions
@@ -89,12 +89,15 @@ class Word2VecEmbeddingStrategy(TextEmbeddingStrategy):
 # Concrete strategy for SentenceTransformer
 class SentenceTransformerEmbeddingStrategy(TextEmbeddingStrategy):
     def __init__(
-        self, model_name: str = "sentence-transformers/all-MiniLM-L12-v2"
+        self,
+        model_name: str = "sentence-transformers/all-MiniLM-L12-v2",
+        precision: str = "float32",
     ) -> None:
         self.model = SentenceTransformer(model_name)
+        self.precision = precision
 
     def create_embedding(self, text: str) -> np.ndarray:
-        return self.model.encode(text)
+        return self.model.encode(sentences=text, precision=self.precision)
 
 
 # -------------------------------------------------------------
@@ -103,19 +106,27 @@ class SentenceTransformerEmbeddingStrategy(TextEmbeddingStrategy):
 
 
 class EmbeddingModel:
-    def __init__(self, strategy: TextEmbeddingStrategy = None) -> None:
-        self.strategy = strategy
+    def __init__(
+        self, strategy: Type[TextEmbeddingStrategy] | None = None, **kwargs
+    ) -> None:
+        strategy_instance = strategy(**kwargs) if strategy else None
+        if not isinstance(strategy_instance, TextEmbeddingStrategy):
+            raise ValueError("strategy must be an instance of TextEmbeddingStrategy")
+        self.strategy = strategy_instance
 
-    def set_strategy(self, strategy: TextEmbeddingStrategy) -> None:
+    def set_strategy(self, strategy: Type[TextEmbeddingStrategy], **kwargs) -> None:
         """
         Define a estratégia de embedding a ser utilizada.
 
         Parâmetros:
             strategy (TextEmbeddingStrategy): Estratégia de embedding.
         """
-        self.strategy = strategy
-        if not isinstance(strategy, TextEmbeddingStrategy):
+        strategy_instance = strategy(**kwargs)
+        if not isinstance(strategy_instance, TextEmbeddingStrategy):
             raise ValueError("strategy must be an instance of TextEmbeddingStrategy")
+        self.strategy = strategy_instance
 
     def create_embedding(self, text: str) -> np.ndarray:
+        if not isinstance(self.strategy, TextEmbeddingStrategy):
+            raise ValueError("strategy is not an instance of TextEmbeddingStrategy")
         return self.strategy.create_embedding(text)
