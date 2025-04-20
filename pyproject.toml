@@ -3,9 +3,7 @@ name = "fiap-datathon"
 version = "0.1.0"
 description = "Último projeto da Pós-Grad em Engenharia de Machine Learning"
 readme = "README.md"
-authors = [
-  { name = "eng-alecrim", email = "lucasalecrimvieira@gmail.com" }
-]
+authors = [{ name = "eng-alecrim", email = "lucasalecrimvieira@gmail.com" }]
 requires-python = ">=3.10"
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -14,9 +12,12 @@ classifiers = [
   "Intended Audience :: Science/Research",
 ]
 dependencies = [
-  "common",
-  "core",
-  "pip>=25.0.1",
+    "beanie>=1.29.0",
+    "common",
+    "core",
+    "custom_nlp",
+    "motor>=3.7.0",
+    "pip>=25.0.1",
 ]
 
 [dependency-groups]
@@ -29,12 +30,12 @@ dev = [
   "taskipy>=1.14.1",
   "ruff>=0.11.5",
   "ignr>=2.2",
-
 ]
 
 [tool.uv.sources]
 core = { workspace = true }
 common = { workspace = true }
+custom_nlp = { workspace = true }
 
 [tool.uv.workspace]
 members = ["src/packages/*"]
@@ -64,8 +65,6 @@ format = "ruff format ."
 test = "pytest"
 cov = "pytest --cov=src/packages --cov-report=term-missing"
 precommit = "task format && task lint && task test"
-
-
 
 
 # Data processing tasks

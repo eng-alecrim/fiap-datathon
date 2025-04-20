@@ -5,7 +5,7 @@
       "rotation": "1 week",
       "retention": "1 month",
       "level": "INFO",
-      "format": "{time} | {level} | {name}:{function}:{line} - {message}",
+      "format": "{time} | {level} | {file}:{name}:{function}:{line} - {message}",
       "backtrace": true,
       "diagnose": true
     },
@@ -14,7 +14,7 @@
       "rotation": "1 week",
       "retention": "1 month",
       "level": "TRACE",
-      "format": "{time} | {level} | {name}:{function}:{line} - {message}",
+      "format": "{time} | {level} | {file}:{name}:{function}:{line} - {message}",
       "backtrace": true,
       "diagnose": true
     },
@@ -23,7 +23,7 @@
       "rotation": "1 week",
       "retention": "1 month",
       "level": "WARNING",
-      "format": "{time} | {level} | {name}:{function}:{line} - {message}",
+      "format": "{time} | {level} | {file}:{name}:{function}:{line} - {message}",
       "backtrace": true,
       "diagnose": true
     }

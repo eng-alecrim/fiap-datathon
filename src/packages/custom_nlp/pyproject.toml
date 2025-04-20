@@ -1,0 +1,18 @@
+[project]
+name = "custom-nlp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [{ name = "eng-alecrim", email = "lucasalecrimvieira@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "nltk>=3.9.1",
+    "spacy>=3.8.5",
+    "gensim>=4.3.3",
+    "sentence-transformers>=4.1.0",
+    "huggingface-hub[hf-xet]>=0.30.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
