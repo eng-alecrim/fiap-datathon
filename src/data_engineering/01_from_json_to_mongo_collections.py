@@ -21,13 +21,15 @@ load_dotenv(find_dotenv())
 
 project_name = os.getenv("PROJECT_NAME", "fiap-datathon")
 
-adm_username = os.getenv("MONGO_INITDB_ROOT_USERNAME")
-adm_password = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
-mongo_uri = f"mongodb://{adm_username}:{adm_password}@localhost:27017"
+adm_username = os.getenv("MONGODB_INITDB_ROOT_USERNAME")
+adm_password = os.getenv("MONGODB_INITDB_ROOT_PASSWORD")
+mongo_uri = (
+    f"mongodb://{adm_username}:{adm_password}@localhost:27017/?directConnection=true"
+)
 
 dir_projeto = get_project_root(project_name=project_name)
 
-configure_logging(project_name=project_name, log_to_file=True)
+configure_logging(project_name=project_name, log_to_file=True, log_level="DEBUG")
 
 # =============================================================================
 # FUNÇÕES
@@ -48,10 +50,10 @@ async def import_json_to_mongodb(
     # 2. Verifica se a coleção já existe
     existing_collections = await db.list_collection_names()
     if collection_name in existing_collections:
-        print(f"A coleção '{collection_name}' já existe.")
+        logger.debug(f"A coleção '{collection_name}' já existe.")
         return None
 
-    print(f"Criando a coleção '{collection_name}' . . .")
+    logger.debug(f"Criando a coleção '{collection_name}' . . .")
     collection = db[collection_name]
 
     # 3. Lendo o arquivo JSON
@@ -71,10 +73,10 @@ async def import_json_to_mongodb(
     # 5. Inserindo os documentos na coleção
     if documents:
         result = await collection.insert_many(documents)
-        print(f"{len(result.inserted_ids)} documentos inseridos com sucesso!")
+        logger.debug(f"{len(result.inserted_ids)} documentos inseridos com sucesso!")
         return None
 
-    print("Nenhum documento encontrado.")
+    logger.debug("Nenhum documento encontrado.")
 
     return None
 
