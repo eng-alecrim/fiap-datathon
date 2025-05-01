@@ -55,6 +55,7 @@ class YamlSettings(BaseSettings):
     ) -> Tuple[PydanticBaseSettingsSource, ...]:
         return (YamlConfigSettingsSource(settings_cls),)
 
+
 # -----------------------------------------------------------------------------
 # Configuração JSON
 # -----------------------------------------------------------------------------
@@ -78,6 +79,7 @@ class JSONSettings(BaseSettings):
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> Tuple[PydanticBaseSettingsSource, ...]:
         return (JsonConfigSettingsSource(settings_cls),)
+
 
 # -----------------------------------------------------------------------------
 # Configuração Logger
