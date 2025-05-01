@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 import nltk
 import spacy
 from nltk.stem import RSLPStemmer
+from typing import Type
 
 # =============================================================
 # Constants
@@ -37,6 +38,11 @@ class TextProcessingStrategy(ABC):
 
 
 class NormalizationStrategy(TextProcessingStrategy):
+    def __init__(self, lower: bool = True, accent: bool = True) -> None:
+        super().__init__()
+        self.lower = lower
+        self.accent = accent
+
     def process(self, text: str) -> str:
         """
         Processa e normaliza o texto removendo acentos, tags HTML e caracteres especiais.
@@ -50,13 +56,20 @@ class NormalizationStrategy(TextProcessingStrategy):
         import re
 
         text = str(text)
-        nfkd_form = unicodedata.normalize("NFC", text)
-        output_str = "".join([c for c in nfkd_form if not unicodedata.combining(c)])
+        normalization_form = (
+            unicodedata.normalize("NFKD", text)
+            if self.accent
+            else unicodedata.normalize("NFC", text)
+        )
+        output_str = "".join([
+            c for c in normalization_form if not unicodedata.combining(c)
+        ])
         regex_tags = r"</?.>"
         output_str = re.sub(regex_tags, "", output_str)
         regex = re.compile(r"[^a-zA-Z_À-ÿ\s]+")
         tokens = regex.sub(" ", output_str).split()
-        tokens = list(map(lambda x: x.lower(), tokens))
+        if self.lower:
+            tokens = list(map(lambda x: x.lower(), tokens))
         return " ".join(map(lambda x: x.strip(), tokens))
 
 
@@ -140,23 +153,31 @@ class Preprocessor:
     Classe que aplica estratégias de processamento de texto.
     """
 
-    def __init__(self, strategy: TextProcessingStrategy = None) -> None:
+    def __init__(
+        self, strategy: Type[TextProcessingStrategy] | None = None, **kwargs
+    ) -> None:
         """
         Inicializa o Preprocessor com uma estratégia opcional.
 
         Parâmetros:
             strategy (TextProcessingStrategy, opcional): Estratégia de processamento a ser usada.
         """
-        self.strategy = strategy
+        strategy_instance = strategy(**kwargs) if strategy else None
+        if not isinstance(strategy_instance, TextProcessingStrategy):
+            raise ValueError("strategy must be an instance of TextProcessingStrategy")
+        self.strategy = strategy_instance
 
-    def set_strategy(self, strategy: TextProcessingStrategy) -> None:
+    def set_strategy(self, strategy: Type[TextProcessingStrategy], **kwargs) -> None:
         """
         Define a estratégia de processamento a ser utilizada.
 
         Parâmetros:
             strategy (TextProcessingStrategy): Estratégia a ser aplicada.
         """
-        self.strategy = strategy
+        strategy_instance = strategy(**kwargs)
+        if not isinstance(strategy_instance, TextProcessingStrategy):
+            raise ValueError("strategy must be an instance of TextProcessingStrategy")
+        self.strategy = strategy_instance
 
     def apply(self, text: str) -> str:
         """
