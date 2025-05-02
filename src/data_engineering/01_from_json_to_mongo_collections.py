@@ -23,6 +23,7 @@ project_name = os.getenv("PROJECT_NAME", "fiap-datathon")
 
 adm_username = os.getenv("MONGODB_INITDB_ROOT_USERNAME")
 adm_password = os.getenv("MONGODB_INITDB_ROOT_PASSWORD")
+database_name = os.getenv("MONGODB_DB_NAME")
 mongo_uri = (
     f"mongodb://{adm_username}:{adm_password}@localhost:27017/?directConnection=true"
 )
@@ -87,7 +88,6 @@ async def import_json_to_mongodb(
 
 
 async def main() -> None:
-    database_name = "alecrim_db"
     collections = ["applicants", "vagas", "prospects"]
     logger.info("Importando arquivos JSON para o MongoDB . . .")
     logger.debug(f"MongoDB URI: {mongo_uri}")

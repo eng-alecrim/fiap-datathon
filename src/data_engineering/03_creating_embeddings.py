@@ -34,6 +34,7 @@ PROJECT_NAME = os.getenv("PROJECT_NAME", "fiap-datathon")
 # Infos Mongodb
 MONGO_USERNAME = os.getenv("MONGODB_INITDB_ROOT_USERNAME")
 MONGO_PASSWORD = os.getenv("MONGODB_INITDB_ROOT_PASSWORD")
+MONGO_DATABASE = os.getenv("MONGODB_DB_NAME")
 MONGO_URI = f"mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@localhost:27017/?directConnection=true"
 
 # Diretórios
@@ -133,9 +134,7 @@ async def fetch_documents_in_batches(
     collection, filter_query, text_field, batch_size=100
 ):
     """Fetch documents in batches with retry logic"""
-    cursor = collection.find(filter_query).limit(
-        500
-    )  # TODO REMOVER O LIMITE AQUI DEPOIS!
+    cursor = collection.find(filter_query)
     batch = []
     total_processed = 0
 
@@ -273,7 +272,7 @@ async def embedding_collection_applicants_parallel(
 
 async def main():
     db_uri = MONGO_URI
-    db_name = "alecrim_db"
+    db_name = MONGO_DATABASE
     collection_name = "applicants"
     text_field = "cv_pt"
 

@@ -34,8 +34,9 @@ load_dotenv(find_dotenv())
 # =============================================================================
 
 # Configuração do projeto
-adm_username = os.getenv("MONGO_INITDB_ROOT_USERNAME")
-adm_password = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
+adm_username = os.getenv("MONGODB_INITDB_ROOT_USERNAME")
+adm_password = os.getenv("MONGODB_INITDB_ROOT_PASSWORD")
+database_name = os.getenv("MONGODB_DB_NAME")
 mongo_uri = f"mongodb://{adm_username}:{adm_password}@localhost:27017"
 
 # Dicionários de níveis
@@ -376,7 +377,7 @@ def eta(batch_size: int, total_items: int, start_time: float) -> str:
 async def init() -> AsyncIOMotorDatabase:
     """Inicializa Beanie e retorna o objeto de banco de dados motor."""
     client = AsyncIOMotorClient(mongo_uri)
-    db = client["alecrim_db"]
+    db = client[database_name]
     await init_beanie(database=db, document_models=[DocumentAnaliseRequisito])
     print("Conexão com Beanie inicializada.")
     return db
