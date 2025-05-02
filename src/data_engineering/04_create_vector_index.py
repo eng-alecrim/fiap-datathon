@@ -25,6 +25,7 @@ PROJECT_NAME = os.getenv("PROJECT_NAME", "fiap-datathon")
 # Infos Mongodb
 MONGO_USERNAME = os.getenv("MONGODB_INITDB_ROOT_USERNAME")
 MONGO_PASSWORD = os.getenv("MONGODB_INITDB_ROOT_PASSWORD")
+MONGO_DATABASE = os.getenv("MONGODB_DB_NAME")
 MONGO_URI = f"mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@localhost:27017/?directConnection=true"
 
 # Diretórios
@@ -39,11 +40,10 @@ configure_logging(project_name=PROJECT_NAME, log_to_file=True, log_level="INFO")
 
 
 async def main() -> None:  # Changed to async function
-    db_name = "alecrim_db"
     collection_name = "applicants"
 
     client = AsyncIOMotorClient(MONGO_URI)
-    db = client[db_name]
+    db = client[MONGO_DATABASE]
     collection = db[collection_name]
 
     # Create your index model, then create the search index
