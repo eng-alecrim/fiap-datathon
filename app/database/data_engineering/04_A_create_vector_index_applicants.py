@@ -59,7 +59,7 @@ async def main() -> None:  # Changed to async function
                 }
             ]
         },
-        name="vector_index",
+        name="vector_index_candidatos_cv_pt",
         type="vectorSearch",
     )
 
