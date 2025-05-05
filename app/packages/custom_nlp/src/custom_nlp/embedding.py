@@ -92,8 +92,9 @@ class SentenceTransformerEmbeddingStrategy(TextEmbeddingStrategy):
         self,
         model_name: str = "sentence-transformers/all-MiniLM-L12-v2",
         precision: str = "float32",
+        device: str = "cpu",
     ) -> None:
-        self.model = SentenceTransformer(model_name)
+        self.model = SentenceTransformer(model_name, device=device)
         self.precision = precision
 
     def create_embedding(self, text: str) -> np.ndarray:

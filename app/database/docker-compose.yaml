@@ -10,6 +10,14 @@ services:
     volumes:
       - data:/data/db
       - config:/data/configdb
+    deploy:
+      resources:
+        limits:
+          cpus: 6
+          memory: 8G
+        reservations:
+          cpus: 2
+          memory: 4G
 
   mongo-express:
     image: mongo-express
